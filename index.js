@@ -1,8 +1,10 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+const path = require('path');
 
 const getProductImg = async query => {
   try {
+    const imgDir = path.join(__dirname, 'images');
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(
@@ -15,6 +17,8 @@ const getProductImg = async query => {
     });
 
     var source = await page.goto(img);
+
+    fs.mkdirSync(imgDir, { recursive: true });
 
     fs.writeFile(`./images/${query}.png`, await source.buffer(), err => {
       if (err) return console.log(err);
